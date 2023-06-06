@@ -1,9 +1,5 @@
-import {
-  ReactComponentElement,
-  ReactElement,
-  ReactHTMLElement,
-  ReactNode,
-} from "react";
+"use client";
+import { ReactNode } from "react";
 import { FirebaseProvider } from "@/libs/Firebase";
 import "./globals.css";
 import { Poppins } from "next/font/google";
@@ -11,6 +7,7 @@ import { Poppins } from "next/font/google";
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   style: ["normal", "italic"],
+  subsets: ["latin-ext", "latin"],
 });
 
 export const metadata = {
@@ -22,7 +19,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <FirebaseProvider>
       <html lang="en">
-        <body className={poppins.className}>{children}</body>
+        <body
+          className={`${poppins.className} bg-gray-900 text-gray-100 w-full`}
+        >
+          {children}
+        </body>
       </html>
     </FirebaseProvider>
   );
