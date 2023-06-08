@@ -6,6 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { AiOutlineLoading } from "react-icons/ai";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 type Inputs = {
   email: string;
   password: string;
@@ -17,21 +18,24 @@ const SignIn = () => {
     formState: { errors },
     reset,
   } = useForm<Inputs>();
+  const router = useRouter();
   const { auth } = React.useContext(ProjectsContext);
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(loading);
     await signInWithEmailAndPassword(data.email, data.password);
     reset({
       email: "",
       password: "",
     });
+    if (user !== null) {
+      router.push("/dashboard/overview");
+    }
   };
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className=" flex gap-3 flex-col mx-auto text-center px-6 md:w-2/3"
+      className=" flex gap-3 flex-col mx-auto text-center px-6 md:w-2/4"
     >
       <section className="space-y-3 mt-24 mb-3">
         <h2 className="text-3xl font-bold">Sign In</h2>
@@ -67,7 +71,8 @@ const SignIn = () => {
       </section>
       <button
         type="submit"
-        className="bg-purple-800 hover:bg-purple-900 transition duration-300 mt-3 p-2 w-full rounded-sm"
+        disabled={loading === true}
+        className="bg-purple-800 flex justify-center hover:bg-purple-900 transition duration-300 mt-3 p-2 w-full rounded-sm"
       >
         {loading === true ? (
           <span className="text-xl">

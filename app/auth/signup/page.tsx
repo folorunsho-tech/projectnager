@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React from "react";
 import Google from "@/components/Logos/Google";
 import { ProjectsContext } from "@/libs/Firebase";
@@ -23,16 +24,16 @@ const SignUp = () => {
   const [updateProfile, updating] = useUpdateProfile(auth);
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
+  const router = useRouter();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(loading);
     await createUserWithEmailAndPassword(data.email, data.password);
-    console.log(loading);
 
     updateProfile({ displayName: data.name })
-      .then((res) => {
+      .then(() => {
         // Profile updated!
-        console.log("Profile updated!");
-        console.log(res);
+
+        router.push("/dashboard/overview");
         // ...
       })
       .catch((error) => {
@@ -95,6 +96,7 @@ const SignUp = () => {
       </section>
       <button
         type="submit"
+        disabled={loading === true}
         className="bg-purple-800 flex justify-center hover:bg-purple-900 transition duration-300 mt-3 p-2 w-full rounded-sm"
       >
         {loading === true ? (
